@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Invitación al Cumpleaños de LuP</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="text-center">
+      <h1>¡Estás Invitado al Cumpleaños de LuP!</h1>
+      <p class="lead">Ven a celebrar el 30° cumpleaños de LuP con nosotros. Será una noche llena de música, diversión y buenos momentos.</p>
+      <p><strong>Fecha:</strong> 16 de agosto de 2024</p>
+    </div>
+    
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <img src="/images/1.jpg" class="img-fluid rounded" alt="Cumpleañero 1">
+      </div>
+      <div class="col-md-4">
+        <img src="/images/2.jpg" class="img-fluid rounded" alt="Cumpleañero 2">
+      </div>
+      <div class="col-md-4">
+        <img src="/images/3.jpg" class="img-fluid rounded" alt="Cumpleañero 3">
+      </div>
+    </div>
+    
+    <div class="mt-5 text-center">
+      <h2>Confirmar Asistencia</h2>
+      <form id="confirmForm" class="form-inline justify-content-center">
+        <div class="form-group mb-2">
+          <label for="nombre" class="sr-only">Nombre</label>
+          <input type="text" class="form-control" id="nombre" placeholder="Tu Nombre">
+        </div>
+        <button type="button" class="btn btn-primary mb-2 ml-2" onclick="agregarNombre()">Confirmar</button>
+      </form>
+    </div>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
+  <script>
+    async function getConfirmados() {
+      try {
+        const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/YOUR_SPREADSHEET_ID/values/Confirmados!A2:B?key=YOUR_API_KEY');
+        const data = await response.json();
+        console.log(data.values);
+        generateTable(data.values);
+      } catch (err) {
+        console.error('Error fetching data', err);
+      }
+    }
+
+    function generateTable(datos) {
+      const tableBody = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
+      tableBody.innerHTML = ''; // Limpiar la tabla antes de llenarla
+
+      datos.forEach((item) => {
+        const row = tableBody.insertRow();
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+        cell1.textContent = item[0]; // Nombre
+        cell2.textContent = item[1]; // Fecha
+      });
+    }
+
+    function agregarNombre() {
+      const nombre = document.getElementById('nombre').value;
+      const fecha = new Date().toLocaleDateString();
+
+      if (nombre) {
+        alert('Gracias por confirmar, ' + nombre + '!');
+        // Aquí puedes agregar la lógica para enviar el nombre y la fecha a tu servidor o Google Sheets
+      } else {
+        alert('Por favor, ingresa tu nombre.');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', getConfirmados);
+  </script>
+</body>
+</html>
